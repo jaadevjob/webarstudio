@@ -1,82 +1,98 @@
-<script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1.6.0/dist/aframe-master.min.js"></script>
-<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-  .arjs-loader {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .arjs-loader div {
-    color: #fff;
-    font-size: 1.3em;
-  }
-</style>
+    <!-- A-Frame -->
+    <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
 
-<body style="margin: 0; overflow: hidden;">
-  <div class="arjs-loader">
-    <div>Loading, please wait...</div>
-  </div>
+    <!-- AR.js NFT -->
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
-  <a-scene
-    vr-mode-ui="enabled: false;"
-    renderer="logarithmicDepthBuffer: true; precision: medium;"
-    embedded
-    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-  >
+    <style>
+      body { margin: 0; overflow: hidden; }
+      .arjs-loader {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+      .arjs-loader div {
+        color: white;
+        font-size: 1.3em;
+      }
+    </style>
+  </head>
 
-    <a-assets>
-      <video
-        id="myvideo"
-        src="assets/asset.mp4"
-        loop
-        preload="auto"
-        playsinline
-        webkit-playsinline
-        muted
-      ></video>
-    </a-assets>
+  <body>
+    <!-- Loading screen -->
+    <div class="arjs-loader"><div>Loading AR, please wait...</div></div>
 
-    <a-nft
-      type="nft"
-      url="nft/image01/image01"
-      smooth="true"
-      smoothCount="10"
-      smoothTolerance=".01"
-      smoothThreshold="5"
-      id="marker"
+    <a-scene
+      embedded
+      vr-mode-ui="enabled: false"
+      renderer="precision: medium; logarithmicDepthBuffer: true"
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
     >
-      <!-- The video plane -->
-      <a-video
-        src="#myvideo"
-        id="videopane"
-        width="1"
-        height="1.78"
-        position="0 0 0"
-        rotation="-90 0 0"
-      ></a-video>
-    </a-nft>
 
-    <a-entity camera></a-entity>
-  </a-scene>
+      <!-- Load video -->
+      <a-assets>
+        <video
+          id="video1"
+          src="assets/asset.mp4"
+          loop
+          preload="auto"
+          playsinline
+          webkit-playsinline
+          muted
+        ></video>
+      </a-assets>
 
-  <script>
-    const marker = document.querySelector("#marker");
-    const video = document.querySelector("#myvideo");
+      <!-- NFT Marker -->
+      <a-nft
+        id="marker"
+        type="nft"
+        url="nft/image01/image01"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance="0.01"
+        smoothThreshold="5"
+      >
+        <!-- Video plane (adjust ratio if needed) -->
+        <a-video
+          id="videoplane"
+          src="#video1"
+          width="1.78"
+          height="1"
+          position="0 0 0"
+          rotation="-90 0 0"
+        >
+        </a-video>
+      </a-nft>
 
-    marker.addEventListener("markerFound", () => {
-      video.play();
-    });
+      <!-- Camera -->
+      <a-entity camera></a-entity>
+    </a-scene>
 
-    marker.addEventListener("markerLost", () => {
-      video.pause();
-    });
-  </script>
-</body>
+    <script>
+      const marker = document.querySelector("#marker");
+      const video = document.querySelector("#video1");
+
+      marker.addEventListener("markerFound", () => {
+        video.play();
+      });
+
+      marker.addEventListener("markerLost", () => {
+        video.pause();
+      });
+    </script>
+
+  </body>
+</html>
